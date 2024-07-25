@@ -59,6 +59,26 @@ const placeOrder = async (req,res) => {
     }
 }
 
+const placeOrderCOD = async (req, res) => {
+    try {
+      const newOrder = new orderModel({
+        userId: req.body.userId,
+        items: req.body.items,
+        amount: req.body.amount,
+        address: req.body.address,
+        paymentMethod: req.body.paymentMethod,
+      });
+  
+      await newOrder.save();
+      await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
+  
+      res.json({ success: true, message: "Order placed successfully with COD" });
+    } catch (error) {
+      console.log(error);
+      res.json({ success: false, message: "Error" });
+    }
+  };
+  
 const verifyOrder = async (req,res)=>{
     const {orderId,success} = req.body;
     try{
@@ -111,4 +131,4 @@ const updateStatus = async (req,res)=>{
     }
 }
 
-export {placeOrder,verifyOrder,userOrders,listOrders,updateStatus}
+export {placeOrder,placeOrderCOD,verifyOrder,userOrders,listOrders,updateStatus}
